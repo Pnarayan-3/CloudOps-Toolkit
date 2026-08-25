@@ -1,0 +1,32 @@
+# AWS credentials
+.aws/
+*.pem
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Generated backups
+backups/*
+!backups/.gitkeep
+
+# Generated logs
+logs/*
+!logs/.gitkeep
+
+# Generated reports
+reports/*
+!reports/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
