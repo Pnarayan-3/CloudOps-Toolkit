@@ -21,7 +21,7 @@ get_instance_id(){
         exit 1
     fi
 
-    if [ "INSTANCE_COUNT" -gt 1 ]; then
+    if [ "$INSTANCE_COUNT" -gt 1 ]; then
         echo "Error:Multiple EC2 instances found with Name=$INSTANCE_NAME"
         echo "Please use a unique Name tag."
         exit 1
@@ -113,7 +113,7 @@ stop_instance(){
 
     read -r -p "Are you sure you want to stop this instance? (y/n): " CONFIRM
 
-    if [[ "$CONFIRM" != "y" && "CONFIRM" != "Y" ]]; then 
+    if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then 
         echo "Operation cancelled."
         exit 0
     fi
