@@ -1,0 +1,92 @@
+---
+name: CloudOps CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - feature/**
+
+  pull_request:
+    branches:
+      - main
+      - master
+      - feature/**
+
+  issues:
+    types: [opened, edited, reopened, closed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudops-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps: 
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup the Environment
+      - name: Display Environment
+        run: |
+          bash --version
+          aws --version
+          shellcheck --version
+
+      # Install Dependencies
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck bc
+
+      # Making the scripts executable
+      - name: Make scripts executable
+        run: |
+          chmod +x cloudops.sh
+          chmod +x backup-cron.sh
+          chmod +x tests/test_cloudops.sh
+
+      # Basic Syntax Validation
+      - name: Basic Syntax Validation
+        run: |
+          bash -n cloudops.sh
+          bash -n backup-cron.sh
+          bash -n config.sh
+          bash -n tests/*.sh
+          bash -n modules/*.sh
+
+      # Run ShellCheck
+      - name: Run ShellCheck
+        run: |
+          shellcheck cloudops.sh
+          shellcheck config.sh
+          shellcheck backup-cron.sh
+          shellcheck modules/*.sh
+          shellcheck tests/*.sh
+
+      # Run Automated tests
+      - name: Run Automated Tests
+        run: ./tests/test_cloudops.sh
+
+      # Security Scanning
+      - name: Check for potential secrets
+        run: |
+          grep -RniE 'AKIA[0-9A-Z]{16}|aws_secret_access_key|password=' . \
+          --exclude-dir=.git || true
+
+      # Git Repository Cleanliness
+      - name: Repository cleanliness
+        run: |
+          git status --short
+
+      # Summary
+      - name: Summary
+        run: |
+          echo "CI Executed Successfully"
