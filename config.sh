@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034
 
 # EC2 Configuration
 INSTANCE_NAME="CloudOps-Demo"
