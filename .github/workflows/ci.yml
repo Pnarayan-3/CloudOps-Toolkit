@@ -65,11 +65,11 @@ jobs:
       # Run ShellCheck
       - name: Run ShellCheck
         run: |
-          shellcheck cloudops.sh
-          shellcheck config.sh
-          shellcheck backup-cron.sh
-          shellcheck modules/*.sh
-          shellcheck tests/*.sh
+          shellcheck -x cloudops.sh
+          shellcheck -x config.sh
+          shellcheck -x backup-cron.sh
+          shellcheck -x modules/*.sh
+          shellcheck -x tests/*.sh
 
       # Run Automated tests
       - name: Run Automated Tests
